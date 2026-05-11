@@ -1,0 +1,33 @@
+# Environment
+.env
+.streamlit/secrets.toml
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Database
+*.db
+*.sqlite
+
+# Output
+output/*.pdf
+output/*.html
+output/*.json
+!output/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Langfuse
+.langfuse/
+
+# Virtual Environment
+venv/
+.venv/
+env/

@@ -1,0 +1,37 @@
+SECURITY GUARDRAILS FOR ALL AGENTS
+===================================
+
+These rules apply to every LLM call in the pipeline.
+
+1. INPUT SANITISATION
+   - Strip any text containing: "ignore previous instructions", "system:", "<|im_start|>", "<|im_end|>", "INST", "<<SYS>>"
+   - Reject inputs longer than 50,000 characters per resume.
+   - Reject inputs containing executable code blocks or script tags.
+
+2. OUTPUT VALIDATION
+   - Every LLM output MUST be valid JSON.
+   - Every output MUST conform to the expected Pydantic schema.
+   - If the output fails validation, retry up to 2 times with a stricter prompt.
+   - On 3rd failure, log the error and skip the candidate with an error flag.
+
+3. PII HANDLING
+   - Resume text is anonymised BEFORE scoring (names, pronouns, DOB removed).
+   - Raw text is stored locally for audit but never sent to external APIs.
+   - All processing happens locally via Ollama — no data leaves the machine.
+
+4. ANTI-HALLUCINATION
+   - All agents must cite specific evidence from the resume for any claim.
+   - The Critic Agent validates every score against the raw resume text.
+   - Scores with confidence below 0.6 trigger automatic re-scoring.
+   - Maximum 2 re-scoring attempts per candidate to prevent infinite loops.
+
+5. BIAS PREVENTION
+   - Scoring is performed on anonymised text only.
+   - No demographic information (name, gender, age, ethnicity) is used in scoring.
+   - Post-scoring fairness audit checks for suspicious patterns.
+   - All scores and justifications are logged for human audit.
+
+6. ACCESS CONTROL
+   - The application runs locally (Streamlit on localhost).
+   - No external API endpoints are exposed.
+   - Override actions require a reviewer name and reason (audit trail).

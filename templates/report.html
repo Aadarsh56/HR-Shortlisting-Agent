@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Shortlist Report — {{ report.jd.title if report.jd else 'N/A' }}</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-alt: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --border: #475569;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-alt) 100%);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .header .meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-card .label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card.hire .number { color: var(--accent-green); }
+        .stat-card.maybe .number { color: var(--accent-amber); }
+        .stat-card.nohire .number { color: var(--accent-red); }
+        .stat-card.total .number { color: var(--accent-blue); }
+
+        .candidate-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .candidate-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-blue);
+        }
+
+        .candidate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .candidate-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .rank-badge {
+            background: var(--accent-blue);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .recommendation {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .rec-hire { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .rec-maybe { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+        .rec-nohire { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border: 1px solid var(--accent-red); }
+
+        .score-bar-container {
+            margin-bottom: 16px;
+        }
+
+        .score-total {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-card-alt);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .dimensions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+
+        .dimensions-table th {
+            text-align: left;
+            padding: 8px 12px;
+            background: var(--bg-card-alt);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dimensions-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+            font-size: 0.9rem;
+        }
+
+        .score-pill {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .skills-section {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--bg-card-alt);
+            border-radius: 12px;
+        }
+
+        .skills-section h4 {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .skill-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin: 2px;
+        }
+
+        .skill-matched { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+        .skill-missing { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+        .skill-bonus { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+
+        .overrides-section {
+            margin-top: 32px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--accent-amber);
+        }
+
+        .overrides-section h2 {
+            color: var(--accent-amber);
+            margin-bottom: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        @media print {
+            body { background: white; color: black; padding: 20px; }
+            .candidate-card { break-inside: avoid; border-color: #ddd; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 HR Resume Shortlist Report</h1>
+        <div class="meta">
+            <strong>{{ report.jd.title if report.jd else 'N/A' }}</strong> &middot;
+            Generated {{ report.generated_at[:19] if report.generated_at else 'N/A' }} &middot;
+            Model: {{ report.model_used or 'llama3' }}
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card total">
+            <div class="number">{{ report.total_candidates or 0 }}</div>
+            <div class="label">Total Candidates</div>
+        </div>
+        <div class="stat-card hire">
+            <div class="number">{{ report.hire_count or 0 }}</div>
+            <div class="label">Hire</div>
+        </div>
+        <div class="stat-card maybe">
+            <div class="number">{{ report.maybe_count or 0 }}</div>
+            <div class="label">Maybe</div>
+        </div>
+        <div class="stat-card nohire">
+            <div class="number">{{ report.no_hire_count or 0 }}</div>
+            <div class="label">No Hire</div>
+        </div>
+    </div>
+
+    {% for ev in report.evaluations %}
+    <div class="candidate-card">
+        <div class="candidate-header">
+            <div>
+                <span class="rank-badge">#{{ ev.rank }}</span>
+                <span class="candidate-name">{{ ev.candidate.name }}</span>
+            </div>
+            <span class="recommendation
+                {% if ev.recommendation == 'Hire' %}rec-hire
+                {% elif ev.recommendation == 'Maybe' %}rec-maybe
+                {% else %}rec-nohire{% endif %}">
+                {{ ev.recommendation }}
+            </span>
+        </div>
+
+        <div class="score-bar-container">
+            <div class="score-total" style="color:
+                {% if ev.weighted_total >= 75 %}var(--accent-green)
+                {% elif ev.weighted_total >= 50 %}var(--accent-amber)
+                {% else %}var(--accent-red){% endif %}">
+                {{ "%.1f"|format(ev.weighted_total) }}/100
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ ev.weighted_total }}%;
+                    background: {% if ev.weighted_total >= 75 %}var(--accent-green)
+                    {% elif ev.weighted_total >= 50 %}var(--accent-amber)
+                    {% else %}var(--accent-red){% endif %};"></div>
+            </div>
+        </div>
+
+        <table class="dimensions-table">
+            <thead>
+                <tr>
+                    <th>Dimension</th>
+                    <th>Weight</th>
+                    <th>Score</th>
+                    <th>Justification</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ds in ev.dimension_scores %}
+                <tr>
+                    <td>{{ ds.dimension }}</td>
+                    <td>{{ "%.0f"|format(ds.weight * 100) }}%</td>
+                    <td>
+                        <span class="score-pill" style="background:
+                            {% if ds.score >= 7 %}rgba(16,185,129,0.15); color: var(--accent-green)
+                            {% elif ds.score >= 4 %}rgba(245,158,11,0.15); color: var(--accent-amber)
+                            {% else %}rgba(239,68,68,0.15); color: var(--accent-red){% endif %}">
+                            {{ ds.score }}/10
+                        </span>
+                    </td>
+                    <td style="color: var(--text-secondary)">{{ ds.justification }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if ev.skills_gap %}
+        <div class="skills-section">
+            <h4>Skills Gap Analysis ({{ "%.0f"|format(ev.skills_gap.match_percentage) }}% match)</h4>
+            {% if ev.skills_gap.matched_skills %}
+            <div>
+                <strong style="color: var(--accent-green);">✓ Matched:</strong>
+                {% for s in ev.skills_gap.matched_skills %}
+                <span class="skill-tag skill-matched">{{ s }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if ev.skills_gap.missing_skills %}
+            <div style="margin-top: 8px;">
+                <strong style="color: var(--accent-red);">✗ Missing:</strong>
+                {% for s in ev.skills_gap.missing_skills %}
+                <span class="skill-tag skill-missing">
+                    {{ s.skill if s.skill is defined else s }}
+                </span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if ev.skills_gap.bonus_skills %}
+            <div style="margin-top: 8px;">
+                <strong style="color: var(--accent-purple);">★ Bonus:</strong>
+                {% for s in ev.skills_gap.bonus_skills %}
+                <span class="skill-tag skill-bonus">{{ s }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    {% if report.overrides %}
+    <div class="overrides-section">
+        <h2>⚠️ Score Overrides (Audit Log)</h2>
+        <table class="dimensions-table">
+            <thead>
+                <tr>
+                    <th>Candidate</th>
+                    <th>Dimension</th>
+                    <th>Original</th>
+                    <th>New</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in report.overrides %}
+                <tr>
+                    <td>{{ o.candidate_name }}</td>
+                    <td>{{ o.dimension }}</td>
+                    <td>{{ o.original_score }}</td>
+                    <td>{{ o.new_score }}</td>
+                    <td style="color: var(--text-secondary)">{{ o.reason }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        Generated by HR Resume Shortlisting Agent &middot;
+        Powered by Llama 3 (Ollama) + LangGraph &middot;
+        All scoring is evidence-based and auditable
+    </div>
+</body>
+</html>

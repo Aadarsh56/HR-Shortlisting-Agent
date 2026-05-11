@@ -1,0 +1,52 @@
+Senior Backend Engineer
+
+Company: TechVista Solutions
+Location: Bangalore, India (Hybrid)
+Experience: 3-5 years
+
+About Us:
+TechVista Solutions is a fast-growing FinTech startup building next-generation payment infrastructure for emerging markets. We process over 2 million transactions daily and are scaling rapidly.
+
+Role Overview:
+We are looking for a Senior Backend Engineer to design, build, and maintain our core payment processing services. You will work closely with the platform team and contribute to architectural decisions.
+
+Required Skills:
+- Python (3+ years)
+- Django or FastAPI
+- PostgreSQL
+- REST API design
+- Docker
+- Git
+- Unit testing (pytest)
+- Message queues (RabbitMQ or Kafka)
+
+Preferred Skills:
+- Kubernetes
+- Redis
+- CI/CD pipelines (GitHub Actions)
+- AWS (EC2, S3, Lambda)
+- GraphQL
+- Microservices architecture
+- Monitoring (Prometheus, Grafana)
+
+Responsibilities:
+- Design and implement scalable backend services
+- Write clean, testable, well-documented code
+- Participate in code reviews and architectural discussions
+- Optimize database queries and API performance
+- Implement monitoring and alerting
+- Collaborate with frontend and mobile teams
+- Mentor junior engineers
+
+Education:
+- Bachelor's degree in Computer Science or related field
+
+Certifications (preferred):
+- AWS Certified Developer
+- Kubernetes Administrator (CKA)
+
+What We Offer:
+- Competitive salary and equity
+- Flexible hybrid work model
+- Learning budget
+- Health insurance

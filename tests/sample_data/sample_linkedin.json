@@ -1,0 +1,64 @@
+{
+    "full_name": "Priya Menon",
+    "email": "priya.menon@email.com",
+    "headline": "Backend Engineer | Python | Cloud Native",
+    "summary": "Passionate backend engineer with 4 years of experience building scalable APIs and microservices. Strong focus on clean code and test-driven development.",
+    "skills": [
+        {"name": "Python"},
+        {"name": "FastAPI"},
+        {"name": "PostgreSQL"},
+        {"name": "Docker"},
+        {"name": "Kubernetes"},
+        {"name": "AWS"},
+        {"name": "Redis"},
+        {"name": "Git"},
+        {"name": "CI/CD"},
+        {"name": "GraphQL"},
+        {"name": "REST APIs"},
+        {"name": "Pytest"},
+        {"name": "Kafka"}
+    ],
+    "experience": [
+        {
+            "title": "Backend Engineer",
+            "company_name": "PayScale Technologies",
+            "duration": "2 years",
+            "date_range": "Jan 2024 - Present",
+            "description": "Building payment processing microservices handling 500K daily transactions. Implemented event-driven architecture using Kafka. Reduced API latency by 40%.",
+            "industry": "FinTech"
+        },
+        {
+            "title": "Software Developer",
+            "company_name": "DataBridge Analytics",
+            "duration": "2 years",
+            "date_range": "Jun 2022 - Dec 2023",
+            "description": "Developed REST APIs for analytics dashboard using Python and FastAPI. Managed PostgreSQL databases and implemented caching with Redis.",
+            "industry": "Data Analytics"
+        }
+    ],
+    "education": [
+        {
+            "school": "Indian Institute of Technology, Madras",
+            "degree": "Bachelor of Technology",
+            "field_of_study": "Computer Science",
+            "end_date": "2022"
+        }
+    ],
+    "certifications": [
+        {"name": "AWS Certified Developer - Associate"},
+        {"name": "Kubernetes Administrator (CKA)"}
+    ],
+    "projects": [
+        {
+            "title": "Real-time Payment Gateway",
+            "description": "Designed and built a real-time payment processing gateway handling 10K TPS using Python, Kafka, and PostgreSQL. Implemented idempotency and retry mechanisms.",
+            "technologies": ["Python", "Kafka", "PostgreSQL", "Docker"]
+        },
+        {
+            "title": "API Rate Limiter",
+            "description": "Built a distributed rate limiting service using Redis and Python, deployed on Kubernetes. Handles 1M+ requests per minute.",
+            "technologies": ["Python", "Redis", "Kubernetes"]
+        }
+    ],
+    "total_experience_years": 4
+}
