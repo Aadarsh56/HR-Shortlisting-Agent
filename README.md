@@ -69,7 +69,7 @@ The Critic Agent can loop back to Scorer if confidence < 0.6 (max 2 retries).
 4. **Ranked Shortlist** — PDF/HTML/JSON reports with scores and justifications
 5. **Human Override** — Adjust scores with reason; all changes audit-logged
 
-### Wow-Factor Additions
+### Bonus Additions
 1. **Skills Gap Analysis** — Matched/Missing/Bonus skills with learning resource links
 2. **Bias Detection Layer** — PII anonymisation before scoring + fairness audit
 3. **Multi-Agent Architecture** — 4 specialised agents in a LangGraph state graph
@@ -99,10 +99,10 @@ The Critic Agent can loop back to Scorer if confidence < 0.6 (max 2 retries).
 
 ---
 
-## LLM & Framework Choice with Rationale
+## LLM & Framework
 
 - **LLM: Llama 3 (via Ollama)**
-  - **Rationale:** The internship brief mandates 100% data privacy and zero external API costs. Using Ollama to host Llama 3 locally ensures no PII (Personally Identifiable Information) from candidate resumes ever leaves the host machine. Llama 3 is highly performant for extraction and reasoning tasks while remaining computationally feasible for local execution.
+  - **Rationale:** Using Ollama to host Llama 3 locally ensures no PII (Personally Identifiable Information) from candidate resumes ever leaves the host machine. Llama 3 is highly performant for extraction and reasoning tasks while remaining computationally feasible for local execution.
 - **Framework: LangGraph**
   - **Rationale:** Candidate evaluation fundamentally requires cyclic reasoning to be accurate. The Critic Agent needs the ability to review the Scorer Agent's output and force a re-evaluation (looping back) if hallucinations or score inconsistencies are detected. LangGraph models this perfectly as a state machine / graph, which is difficult to achieve cleanly with linear frameworks like standard LangChain.
 - **UI: Streamlit**
@@ -169,7 +169,3 @@ See [SECURITY.md](SECURITY.md) for full details.
 | Bias | Anonymised scoring, fairness audit |
 
 ---
-
-## License
-
-This project is submitted as part of the AI Enablement Internship program.
