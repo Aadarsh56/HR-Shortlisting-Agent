@@ -1,4 +1,4 @@
-# HR Resume Shortlisting Agent | AI Enablement Internship
+# HR Resume Shortlisting Agent 
 
 ## AI-Powered Candidate Evaluation · Skills Gap Analysis · Bias Detection
 
